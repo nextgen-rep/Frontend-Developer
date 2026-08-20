@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NextGen Network | Unlimited Connections. Infinite Possibilities.</title>
+    
+    <!-- Google Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brandBlue: '#0056b3',
+                        brandGreen: '#7cbd41',
+                        brandDark: '#0f172a',
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        .dark ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(to bottom, #0056b3, #7cbd41); border-radius: 4px; }
+
+        /* Scroll Animation Utility Classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* Gradient Text */
+        .text-gradient {
+            background: linear-gradient(to right, #0056b3, #7cbd41);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Image hover zoom */
+        .img-zoom-container { overflow: hidden; }
+        .img-zoom { transition: transform 0.5s ease; }
+        .img-zoom-container:hover .img-zoom { transform: scale(1.05); }
+
+        /* Page Transitions for SPA preview */
+        .page-view {
+            display: none; 
+        }
+        .page-view.active {
+            display: block;
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-200 transition-colors duration-300 antialiased selection:bg-brandGreen selection:text-white flex flex-col min-h-screen">
+
+    <nav class="fixed w-full z-50 transition-all duration-300 backdrop-blur-md bg-white/80 dark:bg-brandDark/90 border-b border-gray-200 dark:border-gray-800" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="#home" class="flex items-center gap-3">
+                        <img src="logo_2-removebg-preview.png" alt="NextGen Network Logo Icon" class="h-10 w-auto rounded bg-transparent p-1">
+                        <!-- <span class="font-bold text-2xl tracking-tight hidden sm:block">NextGen <span class="text-brandGreen">Network</span></span> -->
+                    </a>
+                </div>
+
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="#home" class="nav-link hover:text-brandBlue dark:hover:text-brandGreen transition-colors font-medium">Home</a>
+                    <a href="#ventures" class="nav-link hover:text-brandBlue dark:hover:text-brandGreen transition-colors font-medium">Our Ventures</a>
+                    <a href="#blog" class="nav-link hover:text-brandBlue dark:hover:text-brandGreen transition-colors font-medium">Blog</a>
+                    <a href="#about" class="nav-link hover:text-brandBlue dark:hover:text-brandGreen transition-colors font-medium">About Us</a>
+                    
+                    <!-- Theme Toggle Button -->
+                    <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-brandGreen">
+                        <i id="theme-toggle-dark-icon" class="fa-solid fa-moon text-gray-600 hidden"></i>
+                        <i id="theme-toggle-light-icon" class="fa-solid fa-sun text-yellow-400 hidden"></i>
+                    </button>
+                    
+                    <a href="#contact" class="nav-link bg-gradient-to-r from-brandBlue to-brandGreen text-white px-6 py-2.5 rounded-full font-semibold hover:shadow-lg hover:shadow-brandBlue/30 transition-all transform hover:-translate-y-0.5">Contact Us</a>
+                </div>
+
+                <div class="md:hidden flex items-center space-x-4">
+                    <button id="mobile-theme-toggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                        <i id="mobile-theme-toggle-dark-icon" class="fa-solid fa-moon text-gray-600 hidden"></i>
+                        <i id="mobile-theme-toggle-light-icon" class="fa-solid fa-sun text-yellow-400 hidden"></i>
+                    </button>
+                    
+                    <button id="mobile-menu-btn" class="text-gray-600 dark:text-gray-300 hover:text-brandBlue focus:outline-none">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-brandDark border-t border-gray-200 dark:border-gray-800">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#home" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 dark:hover:bg-gray-800">Home</a>
+                <a href="#ventures" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 dark:hover:bg-gray-800">Our Ventures</a>
+                <a href="#blog" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 dark:hover:bg-gray-800">Blog</a>
+                <a href="#about" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 dark:hover:bg-gray-800">About Us</a>
+                <a href="#contact" class="nav-link block px-3 py-2 mt-4 text-center rounded-md text-base font-medium bg-gradient-to-r from-brandBlue to-brandGreen text-white">Contact Us</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-grow">
+
+        <!-- ================= PAGE: HOME ================= -->
+        <div id="page-home" class="page-view active">
+            
+            <!-- Hero Section -->
+            <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden flex items-center min-h-screen">
+                <div class="absolute top-1/4 left-0 w-96 h-96 bg-brandBlue/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob"></div>
+                <div class="absolute top-1/3 right-0 w-96 h-96 bg-brandGreen/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob" style="animation-delay: 2s;"></div>
+
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center reveal">
+                    <!-- Full Logo Display -->
+                    <div class="flex justify-center mb-8">
+                        <img src="logo_2-removebg-preview.png" alt="NextGen Network Full Logo" class="max-h-32 md:max-h-40 w-auto rounded-xl shadow-sm  bg-transparent p-4" onerror="this.onerror=null;this.src='https://placehold.co/600x200/ffffff/0056b3?text=NextGen+Network'">
+                    </div>
+
+                    <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-6">
+                        Connecting <span class="text-gradient">Businesses</span>, <br class="hidden md:block"> Empowering Lives.
+                    </h1>
+                    
+                    <p class="mt-4 text-xl md:text-2xl font-semibold text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                        "Unlimited connections. Infinite possibilities."
+                    </p>
+                    
+                    <p class="mt-4 text-lg text-gray-500 dark:text-gray-400 max-w-2xl mx-auto mb-10">
+                        A unified ecosystem driving innovation across mobility, re-commerce, social welfare, lifestyle, and essential services. We build the future, today.
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <a href="#ventures" class="px-8 py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-full font-bold hover:shadow-xl transition-all transform hover:-translate-y-1">Explore Our Ecosystem</a>
+                        <a href="#contact" class="px-8 py-4 bg-transparent border-2 border-gray-300 dark:border-gray-600 rounded-full font-bold hover:border-brandBlue hover:text-brandBlue dark:hover:text-brandGreen dark:hover:border-brandGreen transition-all">Partner With Us</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Ventures Preview -->
+            <section class="py-20 bg-white dark:bg-brandDark relative">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-16 reveal">
+                        <h2 class="text-sm font-bold text-brandGreen uppercase tracking-wider">Our Ecosystem</h2>
+                        <h3 class="mt-2 text-3xl leading-8 font-extrabold tracking-tight sm:text-4xl">Featured Ventures</h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                        <div class="bg-gray-50 dark:bg-gray-800 rounded-2xl p-8 border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all reveal">
+                            <div class="w-14 h-14 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center mb-6">
+                                <i class="fa-solid fa-motorcycle text-2xl text-brandBlue"></i>
+                            </div>
+                            <h4 class="text-xl font-bold mb-3">Mobility & Ride-Sharing</h4>
+                            <p class="text-gray-600 dark:text-gray-400 mb-6">Fast, affordable, and safe daily commutes.</p>
+                        </div>
+                        <div class="bg-gray-50 dark:bg-gray-800 rounded-2xl p-8 border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all reveal" style="transition-delay: 100ms;">
+                            <div class="w-14 h-14 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center mb-6">
+                                <i class="fa-solid fa-mobile-screen-button text-2xl text-brandGreen"></i>
+                            </div>
+                            <h4 class="text-xl font-bold mb-3">Re-commerce (Tech)</h4>
+                            <p class="text-gray-600 dark:text-gray-400 mb-6">Buy, sell, and upgrade your gadgets effortlessly.</p>
+                        </div>
+                        <div class="bg-gray-50 dark:bg-gray-800 rounded-2xl p-8 border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all reveal" style="transition-delay: 200ms;">
+                            <div class="w-14 h-14 bg-rose-100 dark:bg-rose-900/30 rounded-xl flex items-center justify-center mb-6">
+                                <i class="fa-solid fa-hands-holding-child text-2xl text-rose-500"></i>
+                            </div>
+                            <h4 class="text-xl font-bold mb-3">Social Welfare (NGO)</h4>
+                            <p class="text-gray-600 dark:text-gray-400 mb-6">Focusing on education, healthcare, and empowerment.</p>
+                        </div>
+                    </div>
+                    <div class="text-center reveal">
+                        <a href="#ventures" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-full text-white bg-brandBlue hover:bg-blue-700 transition-colors">
+                            View All Ventures <i class="fa-solid fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Quick Blog Preview Added to Home Page -->
+            <section class="py-20 bg-gray-50 dark:bg-gray-900 relative">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-16 reveal">
+                        <h2 class="text-sm font-bold text-brandBlue uppercase tracking-wider">Latest Updates</h2>
+                        <h3 class="mt-2 text-3xl leading-8 font-extrabold tracking-tight sm:text-4xl text-gray-900 dark:text-white">From Our Blog</h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                        <!-- Blog Post 1 Preview -->
+                        <article class="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all border border-gray-100 dark:border-gray-700 reveal">
+                            <img src="https://placehold.co/600x400/0056b3/ffffff?text=Mobility+Future" alt="Blog Image" class="w-full h-48 object-cover">
+                            <div class="p-6">
+                                <div class="text-xs font-semibold text-brandGreen mb-2">MOBILITY</div>
+                                <h4 class="text-xl font-bold mb-3 hover:text-brandBlue transition-colors cursor-pointer">The Future of Urban Commuting in India</h4>
+                                <p class="text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">How ride-sharing platforms are reshaping the way we travel in tier-1 and tier-2 cities...</p>
+                                <a href="#blog" class="text-brandBlue dark:text-brandGreen font-medium hover:underline">Read Article</a>
+                            </div>
+                        </article>
+
+                        <!-- Blog Post 2 Preview -->
+                        <article class="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all border border-gray-100 dark:border-gray-700 reveal" style="transition-delay: 100ms;">
+                            <img src="https://placehold.co/600x400/7cbd41/ffffff?text=Tech+Recycling" alt="Blog Image" class="w-full h-48 object-cover">
+                            <div class="p-6">
+                                <div class="text-xs font-semibold text-brandGreen mb-2">RE-COMMERCE</div>
+                                <h4 class="text-xl font-bold mb-3 hover:text-brandBlue transition-colors cursor-pointer">Why Refurbished Tech is the Smart Choice</h4>
+                                <p class="text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">E-waste is a growing concern. Discover how buying refurbished smartphones saves money...</p>
+                                <a href="#blog" class="text-brandBlue dark:text-brandGreen font-medium hover:underline">Read Article</a>
+                            </div>
+                        </article>
+
+                        <!-- Blog Post 3 Preview (Hidden on small tablet to balance grid, shown on desktop) -->
+                        <article class="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all border border-gray-100 dark:border-gray-700 reveal hidden lg:block" style="transition-delay: 200ms;">
+                            <img src="https://placehold.co/600x400/e11d48/ffffff?text=NGO+Impact" alt="Blog Image" class="w-full h-48 object-cover">
+                            <div class="p-6">
+                                <div class="text-xs font-semibold text-brandGreen mb-2">SOCIAL WELFARE</div>
+                                <h4 class="text-xl font-bold mb-3 hover:text-brandBlue transition-colors cursor-pointer">Impact Report: Education for All Initiative</h4>
+                                <p class="text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">A look back at our recent campaign where we provided school supplies to over 5,000 children...</p>
+                                <a href="#blog" class="text-brandBlue dark:text-brandGreen font-medium hover:underline">Read Article</a>
+                            </div>
+                        </article>
+                    </div>
+                    
+                    <div class="text-center reveal">
+                        <a href="#blog" class="inline-flex items-center justify-center px-6 py-3 border-2 border-gray-300 dark:border-gray-600 text-base font-medium rounded-full text-gray-700 dark:text-gray-200 hover:border-brandBlue hover:text-brandBlue dark:hover:text-brandGreen dark:hover:border-brandGreen transition-all">
+                            Visit Full Blog <i class="fa-solid fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Expansion Banner -->
+            <section class="py-16 bg-gradient-to-r from-brandBlue to-brandGreen text-white relative overflow-hidden">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center reveal">
+                    <h2 class="text-3xl md:text-4xl font-extrabold mb-4">Ready to be part of the future?</h2>
+                    <p class="text-xl mb-8 max-w-2xl mx-auto opacity-90">Join our ecosystem as a partner, customer, or changemaker. Unlimited connections await.</p>
+                    <a href="#contact" class="inline-block bg-white text-brandBlue font-bold py-4 px-10 rounded-full shadow-lg hover:shadow-2xl transition-all transform hover:-translate-y-1">Get in Touch Today</a>
+                </div>
+                <div class="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-white opacity-10 rounded-full blur-3xl"></div>
+                <div class="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-black opacity-10 rounded-full blur-3xl"></div>
+            </section>
+        </div>
+
+        <!-- ================= PAGE: OUR VENTURES ================= -->
+        <div id="page-ventures" class="page-view pt-24 pb-20 bg-gray-50 dark:bg-gray-900 min-h-screen">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16 reveal">
+                    <h2 class="text-sm font-bold text-brandGreen uppercase tracking-wider">Our Ecosystem</h2>
+                    <h3 class="mt-2 text-3xl leading-8 font-extrabold tracking-tight sm:text-4xl text-gray-900 dark:text-white">Businesses Under NextGen</h3>
+                    <p class="mt-4 max-w-2xl text-xl text-gray-500 dark:text-gray-400 mx-auto">From daily commutes to social welfare, we are building solutions for every aspect of life.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Mobility -->
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-gray-100 dark:border-gray-700 reveal group">
+                        <div class="h-48 bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center overflow-hidden">
+                            <i class="fa-solid fa-motorcycle text-6xl text-brandBlue group-hover:scale-110 transition-transform duration-500"></i>
+                        </div>
+                        <div class="p-8">
+                            <h4 class="text-2xl font-bold mb-2">NextGen Mobility</h4>
+                            <p class="text-gray-600 dark:text-gray-400 mb-4">Fast, affordable, and reliable ride-sharing platform for your daily commutes. (Rapido Model)</p>
+                            <a href="#" class="text-brandBlue dark:text-brandGreen font-medium hover:underline">Learn more &rarr;</a>
+                        </div>
+                    </div>
+
+                    <!-- Re-commerce -->
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-gray-100 dark:border-gray-700 reveal group" style="transition-delay: 100ms;">
+                        <div class="h-48 bg-green-50 dark:bg-green-900/20 flex items-center justify-center overflow-hidden">
+                            <i class="fa-solid fa-mobile-screen-button text-6xl text-brandGreen group-hover:scale-110 transition-transform duration-500"></i>
+                        </div>
+                        <div class="p-8">
+                            <h4 class="text-2xl font-bold mb-2">NextGen Re-Tech</h4>
+                            <p class="text-gray-600 dark:text-gray-400 mb-4">Buy, sell, and repair refurbished smartphones and gadgets with trust. (Cashify Model)</p>
+                            <a href="#" class="text-brandBlue dark:text-brandGreen font-medium hover:underline">Learn more &rarr;</a>
+                        </div>
+                    </div>
+
+                    <!-- NGO -->
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-gray-100 dark:border-gray-700 reveal group" style="transition-delay: 200ms;">
+                        <div class="h-48 bg-rose-50 dark:bg-rose-900/20 flex items-center justify-center overflow-hidden">
+                            <i class="fa-solid fa-hand-holding-heart text-6xl text-rose-500 group-hover:scale-110 transition-transform duration-500"></i>
+                        </div>
+                        <div class="p-8">
+                            <h4 class="text-2xl font-bold mb-2">NextGen Care (NGO)</h4>
+                            <p class="text-gray-600 dark:text-gray-400 mb-4">Empowering underprivileged communities through education, health, and welfare programs.</p>
+                            <a href="#" class="text-brandBlue dark:text-brandGreen font-medium hover:underline">Learn more &rarr;</a>
+                        </div>
+                    </div>
+
+                    <!-- Gym / Fitness -->
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-gray-100 dark:border-gray-700 reveal group" style="transition-delay: 300ms;">
+                        <div class="h-48 bg-orange-50 dark:bg-orange-900/20 flex items-center justify-center overflow-hidden">
+                            <i class="fa-solid fa-dumbbell text-6xl text-orange-500 group-hover:scale-110 transition-transform duration-500"></i>
+                        </div>
+                        <div class="p-8">
+                            <h4 class="text-2xl font-bold mb-2">NextGen Fitness</h4>
+                            <p class="text-gray-600 dark:text-gray-400 mb-4">Premium gym spaces equipped with modern machinery and expert trainers for a healthier you.</p>
+                            <a href="#" class="text-brandBlue dark:text-brandGreen font-medium hover:underline">Learn more &rarr;</a>
+                        </div>
+                    </div>
+
+                    <!-- Restaurant -->
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-gray-100 dark:border-gray-700 reveal group" style="transition-delay: 400ms;">
+                        <div class="h-48 bg-yellow-50 dark:bg-yellow-900/20 flex items-center justify-center overflow-hidden">
+                            <i class="fa-solid fa-utensils text-6xl text-yellow-500 group-hover:scale-110 transition-transform duration-500"></i>
+                        </div>
+                        <div class="p-8">
+                            <h4 class="text-2xl font-bold mb-2">NextGen Bites</h4>
+                            <p class="text-gray-600 dark:text-gray-400 mb-4">Culinary excellence delivered. Experience fine dining and quick-service restaurants under one roof.</p>
+                            <a href="#" class="text-brandBlue dark:text-brandGreen font-medium hover:underline">Learn more &rarr;</a>
+                        </div>
+                    </div>
+
+                    <!-- RO Sell & Services -->
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-gray-100 dark:border-gray-700 reveal group" style="transition-delay: 500ms;">
+                        <div class="h-48 bg-cyan-50 dark:bg-cyan-900/20 flex items-center justify-center overflow-hidden">
+                            <i class="fa-solid fa-droplet text-6xl text-cyan-500 group-hover:scale-110 transition-transform duration-500"></i>
+                        </div>
+                        <div class="p-8">
+                            <h4 class="text-2xl font-bold mb-2">NextGen Aqua</h4>
+                            <p class="text-gray-600 dark:text-gray-400 mb-4">Top-quality Water Purifiers (RO) sales, installation, and rapid maintenance services.</p>
+                            <a href="#" class="text-brandBlue dark:text-brandGreen font-medium hover:underline">Learn more &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Future Expansions -->
+                <div class="mt-16 bg-gradient-to-br from-gray-900 to-brandDark rounded-3xl p-10 text-center text-white border border-gray-800 shadow-2xl reveal">
+                    <i class="fa-solid fa-rocket text-5xl text-brandGreen mb-6"></i>
+                    <h3 class="text-3xl font-bold mb-4">Infinite Possibilities...</h3>
+                    <p class="text-gray-400 max-w-3xl mx-auto text-lg mb-8">NextGen Network is constantly evolving. We are actively researching and developing new ventures in E-commerce, Real Estate, and AI technology to add to our ecosystem soon.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= PAGE: BLOG ================= -->
+        <div id="page-blog" class="page-view pt-24 pb-20 bg-white dark:bg-brandDark min-h-screen">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16 reveal">
+                    <h2 class="text-sm font-bold text-brandBlue uppercase tracking-wider">Insights & News</h2>
+                    <h3 class="mt-2 text-3xl leading-8 font-extrabold tracking-tight sm:text-4xl text-gray-900 dark:text-white">Our Latest Blog Posts</h3>
+                    <p class="mt-4 max-w-2xl text-xl text-gray-500 dark:text-gray-400 mx-auto">Stay updated with the latest trends, company news, and industry insights.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Blog Post 1 -->
+                    <article class="bg-gray-50 dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all border border-gray-100 dark:border-gray-700 reveal">
+                        <img src="https://placehold.co/600x400/0056b3/ffffff?text=Mobility+Future" alt="Blog Image" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <div class="text-xs font-semibold text-brandGreen mb-2">MOBILITY • OCT 12, 2026</div>
+                            <h4 class="text-xl font-bold mb-3 hover:text-brandBlue transition-colors cursor-pointer">The Future of Urban Commuting in India</h4>
+                            <p class="text-gray-600 dark:text-gray-400 mb-4 line-clamp-3">How ride-sharing platforms are reshaping the way we travel in tier-1 and tier-2 cities, reducing carbon footprints.</p>
+                            <a href="#" class="text-brandBlue dark:text-white font-medium hover:underline">Read Full Article</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog Post 2 -->
+                    <article class="bg-gray-50 dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all border border-gray-100 dark:border-gray-700 reveal" style="transition-delay: 100ms;">
+                        <img src="https://placehold.co/600x400/7cbd41/ffffff?text=Tech+Recycling" alt="Blog Image" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <div class="text-xs font-semibold text-brandGreen mb-2">RE-COMMERCE • OCT 05, 2026</div>
+                            <h4 class="text-xl font-bold mb-3 hover:text-brandBlue transition-colors cursor-pointer">Why Refurbished Tech is the Smart Choice</h4>
+                            <p class="text-gray-600 dark:text-gray-400 mb-4 line-clamp-3">E-waste is a growing concern. Discover how buying refurbished smartphones saves money and the environment.</p>
+                            <a href="#" class="text-brandBlue dark:text-white font-medium hover:underline">Read Full Article</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog Post 3 -->
+                    <article class="bg-gray-50 dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all border border-gray-100 dark:border-gray-700 reveal" style="transition-delay: 200ms;">
+                        <img src="https://placehold.co/600x400/e11d48/ffffff?text=NGO+Impact" alt="Blog Image" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <div class="text-xs font-semibold text-brandGreen mb-2">SOCIAL WELFARE • SEP 28, 2026</div>
+                            <h4 class="text-xl font-bold mb-3 hover:text-brandBlue transition-colors cursor-pointer">Impact Report: Education for All Initiative</h4>
+                            <p class="text-gray-600 dark:text-gray-400 mb-4 line-clamp-3">A look back at our recent campaign where we provided school supplies to over 5,000 children across rural areas.</p>
+                            <a href="#" class="text-brandBlue dark:text-white font-medium hover:underline">Read Full Article</a>
+                        </div>
+                    </article>
+                </div>
+                
+                <div class="text-center mt-12 reveal">
+                    <button class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white px-6 py-2 rounded-full font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">Load More Posts</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= PAGE: ABOUT US ================= -->
+        <div id="page-about" class="page-view pt-24 pb-20 bg-gray-50 dark:bg-gray-900 min-h-screen">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <!-- About Hero -->
+                <div class="flex flex-col lg:flex-row items-center gap-12 mb-20 reveal">
+                    <div class="lg:w-1/2">
+                        <h2 class="text-sm font-bold text-brandBlue uppercase tracking-wider mb-2">Who We Are</h2>
+                        <h3 class="text-3xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-6">Building the Infrastructure for Tomorrow</h3>
+                        <p class="text-lg text-gray-600 dark:text-gray-400 mb-6">
+                            NextGen Network is not just a company; it's a rapidly expanding ecosystem designed to simplify and enhance everyday life. Founded with the vision of <strong>"Unlimited connections. Infinite possibilities,"</strong> we bridge the gap between essential services and modern consumers.
+                        </p>
+                        <p class="text-lg text-gray-600 dark:text-gray-400">
+                            Whether you are commuting to work, upgrading your phone, grabbing a healthy bite, or contributing to society, NextGen is there to ensure a seamless, high-quality experience across all touchpoints.
+                        </p>
+                    </div>
+                    <div class="lg:w-1/2 w-full flex justify-center">
+                        <img src="full_logo.png" alt="NextGen Network About" class="rounded-2xl shadow-xl max-w-full h-auto object-contain bg-white p-6 border border-gray-100" onerror="this.onerror=null;this.src='https://placehold.co/800x600/ffffff/0056b3?text=NextGen+Ecosystem'">
+                    </div>
+                </div>
+
+                <!-- Core Values -->
+                <div class="text-center mb-12 reveal">
+                    <h3 class="text-3xl font-extrabold text-gray-900 dark:text-white">Our Core Values</h3>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 reveal">
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm text-center border-t-4 border-brandBlue">
+                        <div class="w-12 h-12 bg-blue-100 text-brandBlue rounded-full flex items-center justify-center mx-auto mb-4 text-xl"><i class="fa-solid fa-lightbulb"></i></div>
+                        <h4 class="font-bold text-lg mb-2">Innovation First</h4>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm">Always adopting the latest tech to solve everyday problems.</p>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm text-center border-t-4 border-brandGreen">
+                        <div class="w-12 h-12 bg-green-100 text-brandGreen rounded-full flex items-center justify-center mx-auto mb-4 text-xl"><i class="fa-solid fa-leaf"></i></div>
+                        <h4 class="font-bold text-lg mb-2">Sustainability</h4>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm">Building eco-friendly models like Re-commerce and RO maintenance.</p>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm text-center border-t-4 border-rose-500">
+                        <div class="w-12 h-12 bg-rose-100 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-4 text-xl"><i class="fa-solid fa-users"></i></div>
+                        <h4 class="font-bold text-lg mb-2">Community Impact</h4>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm">Giving back to society through our dedicated NGO branch.</p>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm text-center border-t-4 border-yellow-500">
+                        <div class="w-12 h-12 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4 text-xl"><i class="fa-solid fa-shield-halved"></i></div>
+                        <h4 class="font-bold text-lg mb-2">Trust & Quality</h4>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm">Ensuring the highest standards across food, fitness, and services.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= PAGE: CONTACT US ================= -->
+        <div id="page-contact" class="page-view pt-24 pb-20 bg-white dark:bg-brandDark min-h-screen">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16 reveal">
+                    <h2 class="text-sm font-bold text-brandGreen uppercase tracking-wider">Get In Touch</h2>
+                    <h3 class="mt-2 text-3xl leading-8 font-extrabold tracking-tight sm:text-4xl text-gray-900 dark:text-white">Let's Build the Future Together</h3>
+                    <p class="mt-4 max-w-2xl text-xl text-gray-500 dark:text-gray-400 mx-auto">Have a question about our services, want to partner, or just want to say hi? Drop us a message.</p>
+                </div>
+
+                <div class="flex flex-col lg:flex-row gap-12 bg-gray-50 dark:bg-gray-800 rounded-3xl overflow-hidden shadow-xl reveal">
+                    
+                    <!-- Contact Info (Left) -->
+                    <div class="lg:w-2/5 bg-gradient-to-br from-brandBlue to-brandGreen p-10 text-white flex flex-col justify-between">
+                        <div>
+                            <h4 class="text-2xl font-bold mb-6">Contact Information</h4>
+                            <p class="mb-8 opacity-90">Fill up the form and our team will get back to you within 24 hours.</p>
+                            
+                            <div class="space-y-6">
+                                <div class="flex items-start gap-4">
+                                    <i class="fa-solid fa-phone mt-1 text-xl opacity-80"></i>
+                                    <div>
+                                        <p class="font-medium text-lg">+91 98765 43210</p>
+                                        <p class="opacity-75 text-sm">Mon-Fri, 9am to 6pm</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-4">
+                                    <i class="fa-solid fa-envelope mt-1 text-xl opacity-80"></i>
+                                    <div>
+                                        <p class="font-medium text-lg">hello@nextgennetwork.in</p>
+                                        <p class="opacity-75 text-sm">Online support</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-4">
+                                    <i class="fa-solid fa-location-dot mt-1 text-xl opacity-80"></i>
+                                    <div>
+                                        <p class="font-medium text-lg">NextGen HQ, Tech Park</p>
+                                        <p class="opacity-75 text-sm">New Delhi, India 110001</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-12 flex gap-4">
+                            <a href="#" class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/40 transition-colors"><i class="fa-brands fa-facebook-f"></i></a>
+                            <a href="#" class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/40 transition-colors"><i class="fa-brands fa-twitter"></i></a>
+                            <a href="#" class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/40 transition-colors"><i class="fa-brands fa-instagram"></i></a>
+                            <a href="#" class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/40 transition-colors"><i class="fa-brands fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+
+                    <!-- Contact Form (Right) -->
+                    <div class="lg:w-3/5 p-10">
+                        <form action="#" method="POST" class="space-y-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">First Name</label>
+                                    <input type="text" class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brandBlue focus:border-transparent outline-none transition-all" placeholder="John">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Last Name</label>
+                                    <input type="text" class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brandBlue focus:border-transparent outline-none transition-all" placeholder="Doe">
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email Address</label>
+                                    <input type="email" class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brandBlue focus:border-transparent outline-none transition-all" placeholder="john@example.com">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Interested Branch</label>
+                                    <select class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brandBlue focus:border-transparent outline-none transition-all">
+                                        <option>General Inquiry</option>
+                                        <option>NextGen Mobility</option>
+                                        <option>NextGen Re-Tech</option>
+                                        <option>NextGen Care (NGO)</option>
+                                        <option>NextGen Fitness</option>
+                                        <option>Partnership/Investment</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Message</label>
+                                <textarea rows="4" class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brandBlue focus:border-transparent outline-none transition-all resize-none" placeholder="Write your message here..."></textarea>
+                            </div>
+
+                            <button type="button" class="w-full bg-gradient-to-r from-brandBlue to-brandGreen text-white font-bold py-3 px-6 rounded-lg hover:shadow-lg transition-all transform hover:-translate-y-0.5">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white pt-16 pb-8 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-1 md:col-span-1">
+                    <div class="flex items-center gap-3 mb-4">
+                        <img src="logo_2-removebg-preview.png" alt="Logo" class="h-10 w-auto rounded bg-white p-1" onerror="this.onerror=null;this.src='https://placehold.co/100x100/0056b3/ffffff?text=NGN'">
+                        <span class="font-bold text-xl tracking-tight">NextGen <span class="text-brandGreen">Network</span></span>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-6">Unlimited connections. Infinite possibilities. Building the future ecosystem across multiple domains.</p>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold text-lg mb-4 text-white">Our Ventures</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="#ventures" class="hover:text-brandGreen transition-colors">Mobility (Rapido like)</a></li>
+                        <li><a href="#ventures" class="hover:text-brandGreen transition-colors">Re-Tech (Cashify like)</a></li>
+                        <li><a href="#ventures" class="hover:text-brandGreen transition-colors">Care Foundation (NGO)</a></li>
+                        <li><a href="#ventures" class="hover:text-brandGreen transition-colors">Fitness & Wellness</a></li>
+                        <li><a href="#ventures" class="hover:text-brandGreen transition-colors">Food & Beverages</a></li>
+                        <li><a href="#ventures" class="hover:text-brandGreen transition-colors">RO Solutions</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold text-lg mb-4 text-white">Quick Links</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="#home" class="hover:text-brandBlue transition-colors">Home</a></li>
+                        <li><a href="#about" class="hover:text-brandBlue transition-colors">About Us</a></li>
+                        <li><a href="#blog" class="hover:text-brandBlue transition-colors">Blog</a></li>
+                        <li><a href="#contact" class="hover:text-brandBlue transition-colors">Contact</a></li>
+                        <li><a href="#" class="hover:text-brandBlue transition-colors">Privacy Policy</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-lg mb-4 text-white">Newsletter</h4>
+                    <p class="text-gray-400 text-sm mb-4">Subscribe for the latest updates from the NextGen ecosystem.</p>
+                    <div class="flex">
+                        <input type="email" placeholder="Email address" class="px-4 py-2 w-full rounded-l-md text-gray-900 focus:outline-none">
+                        <button class="bg-brandBlue px-4 py-2 rounded-r-md hover:bg-blue-600 transition-colors"><i class="fa-solid fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-gray-500 text-sm">
+                <p>&copy; 2026 NextGen Network. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-white transition-colors"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#" class="hover:text-white transition-colors"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#" class="hover:text-white transition-colors"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" class="hover:text-white transition-colors"><i class="fa-brands fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Core Interactive Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- 1. SPA ROUTING (Hash Based) ---
+            const pageViews = document.querySelectorAll('.page-view');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            function handleNavigation() {
+                let hash = window.location.hash.substring(1) || 'home';
+                
+                const targetPage = document.getElementById(`page-${hash}`);
+                if (!targetPage) return;
+
+                pageViews.forEach(page => {
+                    page.classList.remove('active');
+                    page.style.display = 'none';
+                });
+
+                targetPage.style.display = 'block';
+                setTimeout(() => {
+                    targetPage.classList.add('active');
+                }, 10);
+
+                navLinks.forEach(link => {
+                    if (link.getAttribute('href') === `#${hash}`) {
+                        link.classList.add('text-brandBlue', 'dark:text-brandGreen');
+                    } else {
+                        link.classList.remove('text-brandBlue', 'dark:text-brandGreen');
+                    }
+                });
+
+                const mobileMenu = document.getElementById('mobile-menu');
+                if(mobileMenu) mobileMenu.classList.add('hidden');
+
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                initRevealAnimations();
+            }
+
+            window.addEventListener('hashchange', handleNavigation);
+            handleNavigation();
+
+            // --- 2. DARK/LIGHT MODE TOGGLE ---
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const mobileThemeToggleBtn = document.getElementById('mobile-theme-toggle');
+            const darkIcon = document.getElementById('theme-toggle-dark-icon');
+            const lightIcon = document.getElementById('theme-toggle-light-icon');
+            const mobileDarkIcon = document.getElementById('mobile-theme-toggle-dark-icon');
+            const mobileLightIcon = document.getElementById('mobile-theme-toggle-light-icon');
+
+            function updateThemeUI(isDark) {
+                if (isDark) {
+                    document.documentElement.classList.add('dark');
+                    if(darkIcon) darkIcon.classList.add('hidden');
+                    if(lightIcon) lightIcon.classList.remove('hidden');
+                    if(mobileDarkIcon) mobileDarkIcon.classList.add('hidden');
+                    if(mobileLightIcon) mobileLightIcon.classList.remove('hidden');
+                    localStorage.setItem('color-theme', 'dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    if(lightIcon) lightIcon.classList.add('hidden');
+                    if(darkIcon) darkIcon.classList.remove('hidden');
+                    if(mobileLightIcon) mobileLightIcon.classList.add('hidden');
+                    if(mobileDarkIcon) mobileDarkIcon.classList.remove('hidden');
+                    localStorage.setItem('color-theme', 'light');
+                }
+            }
+
+            if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                updateThemeUI(true);
+            } else {
+                updateThemeUI(false);
+            }
+
+            const toggleTheme = () => {
+                const isDark = document.documentElement.classList.contains('dark');
+                updateThemeUI(!isDark);
+            };
+
+            if(themeToggleBtn) themeToggleBtn.addEventListener('click', toggleTheme);
+            if(mobileThemeToggleBtn) mobileThemeToggleBtn.addEventListener('click', toggleTheme);
+
+
+            // --- 3. MOBILE MENU TOGGLE ---
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenuElement = document.getElementById('mobile-menu');
+
+            if(mobileMenuBtn && mobileMenuElement) {
+                mobileMenuBtn.addEventListener('click', () => {
+                    mobileMenuElement.classList.toggle('hidden');
+                });
+            }
+
+            // --- 4. SCROLL ANIMATIONS ---
+            function initRevealAnimations() {
+                const reveals = document.querySelectorAll(".reveal");
+                
+                const observerOptions = {
+                    root: null,
+                    rootMargin: '0px',
+                    threshold: 0.15
+                };
+
+                const observer = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('active');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, observerOptions);
+
+                reveals.forEach(reveal => {
+                    reveal.classList.remove('active'); 
+                    observer.observe(reveal);
+                });
+            }
+            
+            // Navbar Scroll Effect
+            window.addEventListener('scroll', () => {
+                const nav = document.getElementById('navbar');
+                if(nav) {
+                    if (window.scrollY > 20) {
+                        nav.classList.add('shadow-md');
+                    } else {
+                        nav.classList.remove('shadow-md');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
